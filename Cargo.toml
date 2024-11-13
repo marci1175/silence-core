@@ -1,0 +1,9 @@
+[package]
+name = "silence-core"
+version = "0.1.0"
+edition = "2021"
+description = "Core audio I/O abstractions for the silence crate."
+license = "Apache-2.0"
+categories = ["asynchronous", "multimedia::audio", "multimedia::encoding"]
+
+[dependencies]
