@@ -6,4 +6,15 @@ description = "Core audio I/O abstractions for the silence crate."
 license = "Apache-2.0"
 categories = ["asynchronous", "multimedia::audio", "multimedia::encoding"]
 
+[features]
+default = ["io"]
+async = ["dep:tokio"]
+serde = ["dep:serde"]
+io = ["dep:cpal"]
+
 [dependencies]
+anyhow = "1.0.93"
+parking_lot = "0.12.3"
+cpal = {version = "0.15.3", optional = true}
+serde = { version = "1.0.215", optional = true, features = ["derive"] }
+tokio = {version = "1.41.1", optional = true, features = ["macros"]}
