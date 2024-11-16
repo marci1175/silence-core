@@ -1,7 +1,7 @@
 //! Traits, functions and type definitions for functioning audio I/O.
 //! The I/O feature provides types and functions for recording and playbacking audio aswell as handling the data.
 
-use cpal::{traits::HostTrait, Device, Host};
+use cpal::{traits::{DeviceTrait, HostTrait}, DefaultStreamConfigError, Device, Host, SupportedStreamConfig};
 
 pub mod playback;
 pub mod record;
@@ -25,6 +25,16 @@ impl AudioDevice {
     /// Creates a new [`AudioDevice`] instance.
     pub fn new(output: Option<Device>, input: Option<Device>) -> Self {
         Self { output, input }
+    }
+
+    /// Gets the `input` device's default configuration
+    pub fn get_input_config(&self) -> Option<Result<SupportedStreamConfig, DefaultStreamConfigError>> {
+        self.input.clone().map(|input_device| input_device.default_input_config())
+    }
+
+    /// Gets the `output` device's default configuration
+    pub fn get_output_config(&self) -> Option<Result<SupportedStreamConfig, DefaultStreamConfigError>> {
+        self.output.clone().map(|input_device| input_device.default_output_config())
     }
 }
 

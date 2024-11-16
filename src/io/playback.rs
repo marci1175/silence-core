@@ -2,7 +2,7 @@
 
 use anyhow::Result;
 use cpal::{
-    traits::{DeviceTrait, StreamTrait}, BufferSize, Sample, SizedSample, Stream, StreamConfig, StreamError
+    traits::DeviceTrait , BufferSize, SizedSample, Stream, StreamConfig, StreamError
 };
 
 use super::OutputDevice;
@@ -21,15 +21,22 @@ pub fn stream_audio<
     T: SizedSample + Send + Sync + cpal::FromSample<f32> + 'static,
     //Error callback is called when the output_stream encounters an error
     E: FnMut(StreamError) + Send + 'static,
+    //The iterator for writing the samples to the output / data buffer
+    S: Iterator<Item = T> + Send + 'static + Clone,
 >(
     device: OutputDevice,
     error_callback: E,
-    mut sample_callback: impl FnMut() -> T + Send + 'static,
+    mut samples: S,
 ) -> Result<Stream> {
+    //Get supported config
     let supported_config = device.default_output_config()?;
+
+    //Get cahnnel count
     let channel_count = supported_config.channels();
 
-    let stream = device.build_output_stream(
+    //Create data `Stream` and return it
+    let stream: Stream = device.build_output_stream(
+        //Get the `StreamConfig` from the default input and output devices.
         &StreamConfig {
             channels: channel_count,
             sample_rate: supported_config.sample_rate(),
@@ -40,28 +47,26 @@ pub fn stream_audio<
                 }
             },
         },
-        move |data: &mut [T], _: &cpal::OutputCallbackInfo| {
-            write_data(data, channel_count as usize, &mut sample_callback)
+        //Data writer callback, write the samples to the frames through this
+        move |data: &mut [T], _info: &cpal::OutputCallbackInfo| {
+            //Write the samples to the data buffer
+            for frame in data {
+                *frame = if let Some(sample) = samples.next() {
+                    //Write the sample to the frame 
+                    sample
+                }
+                else {
+                    //If there arent any samples left, write silence
+                    T::from_sample(0.0)
+                };
+            }
         },
+        //If an error occurs while writing the data this function will be called
         error_callback,
+        //Timeout
         None,
     )?;
 
+    //Return the `Stream` handle
     Ok(stream)
-}
-
-/// # Information
-/// Writes data to the output buffer from calling the `sample_callback`
-/// # Error
-/// This function cannot panic in itself.
-fn write_data<T>(output: &mut [T], channels: usize, sample_callback: &mut dyn FnMut() -> T)
-where
-    T: Sample + cpal::FromSample<f32>,
-{
-    for frame in output.chunks_mut(channels) {
-        let value: T = sample_callback().to_sample();
-        for sample in frame.iter_mut() {
-            *sample = value;
-        }
-    }
 }
