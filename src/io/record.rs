@@ -10,7 +10,7 @@ use parking_lot::Mutex;
 
 use super::InputDevice;
 
-/// # Information
+///
 /// Records audio until the user interrupts it.
 ///
 /// # Behavior

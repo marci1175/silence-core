@@ -8,7 +8,7 @@ use cpal::{
 
 use super::OutputDevice;
 
-/// # Information
+///
 /// Plays back audio from a `callback` to an [`OutputDevice`].
 ///
 /// # Behavior
@@ -17,6 +17,7 @@ use super::OutputDevice;
 ///
 /// # Error
 /// The `error_callback` is called when an error occurs while streaming to the output.
+/// 
 pub fn stream_audio<
     //This is the type of the `Sample`-s we are streaming to the [`OutputDevice`]
     T: SizedSample + Send + Sync + cpal::FromSample<f32> + 'static,
