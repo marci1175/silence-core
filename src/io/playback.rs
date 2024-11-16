@@ -9,7 +9,7 @@ use cpal::{
 use super::OutputDevice;
 
 ///
-/// Plays back audio from a `callback` to an [`OutputDevice`].
+/// Plays back audio from an [`Iterator`] to an [`OutputDevice`].
 ///
 /// # Behavior
 /// The [`Stream`] returned by this function will not play automaticly, you will have to call [`StreamTrait::play`] to start playing.
