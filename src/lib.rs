@@ -21,7 +21,11 @@
 //!
 
 #[cfg(feature = "io")]
-#[cfg(test)]
 pub mod io;
 
-pub mod tests;
+#[doc(hidden)]
+#[cfg(test)]
+mod tests;
+
+#[cfg(feature = "opus")]
+pub mod opus;

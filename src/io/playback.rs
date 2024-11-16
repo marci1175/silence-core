@@ -2,18 +2,19 @@
 
 use anyhow::Result;
 use cpal::{
-    traits::DeviceTrait , BufferSize, SizedSample, Stream, StreamConfig, StreamError
+    traits::{DeviceTrait, StreamTrait},
+    BufferSize, SizedSample, Stream, StreamConfig, StreamError,
 };
 
 use super::OutputDevice;
 
 /// # Information
 /// Plays back audio from a `callback` to an [`OutputDevice`].
-/// 
+///
 /// # Behavior
-/// The [`Stream`] returned by this function will not play automaticly, you will have to call [`Stream::play`] to start playing.
+/// The [`Stream`] returned by this function will not play automaticly, you will have to call [`StreamTrait::play`] to start playing.
 /// If the ongoing [`Stream`] is dropped the audio stream will stop.
-/// 
+///
 /// # Error
 /// The `error_callback` is called when an error occurs while streaming to the output.
 pub fn stream_audio<
@@ -52,10 +53,9 @@ pub fn stream_audio<
             //Write the samples to the data buffer
             for frame in data {
                 *frame = if let Some(sample) = samples.next() {
-                    //Write the sample to the frame 
+                    //Write the sample to the frame
                     sample
-                }
-                else {
+                } else {
                     //If there arent any samples left, write silence
                     T::from_sample(0.0)
                 };

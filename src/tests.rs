@@ -32,7 +32,8 @@ mod tests {
 
         let err_callback = |err| eprintln!("an error occurred on stream: {}", err);
 
-        let stream = stream_audio(output_device, err_callback, std::iter::from_fn(next_value)).unwrap();
+        let stream =
+            stream_audio(output_device, err_callback, std::iter::from_fn(next_value)).unwrap();
 
         stream.play().unwrap();
 
@@ -50,7 +51,9 @@ mod tests {
 
         let err_callback = |err| eprintln!("an error occurred on stream: {}", err);
 
-        let buffer_handle = record_audio_with_interrupt(receiver, output_device, err_callback, config.into()).unwrap();
+        let buffer_handle =
+            record_audio_with_interrupt(receiver, output_device, err_callback, config.into())
+                .unwrap();
 
         sleep(Duration::from_secs(3));
 
@@ -58,7 +61,7 @@ mod tests {
 
         let samples = buffer_handle.lock().clone().into_iter();
 
-        let stream = stream_audio::<f32, _, _>(audio_device.output.unwrap(), err_callback, samples).unwrap();
+        let stream = stream_audio(audio_device.output.unwrap(), err_callback, samples).unwrap();
 
         stream.play().unwrap();
 
