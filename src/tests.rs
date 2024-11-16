@@ -5,10 +5,14 @@
 mod tests {
     use std::{thread::sleep, time::Duration};
 
-    use cpal::traits::{DeviceTrait, StreamTrait};
+    use cpal::{
+        traits::{DeviceTrait, StreamTrait},
+        StreamError,
+    };
+    use opus::Decoder;
     use tokio::sync::oneshot;
 
-    use crate::io::{self, playback::stream_audio, record::record_audio_with_interrupt};
+    use crate::{io::{self, playback::stream_audio, record::record_audio_with_interrupt}, opus::{decode::create_opus_decoder, encode::create_opus_encoder}};
 
     #[test]
     fn audio_playback() {
@@ -45,26 +49,74 @@ mod tests {
         let host = io::default_host();
         let audio_device = io::get_audio_device(host);
         let config = audio_device.get_input_config().unwrap().unwrap();
-        let output_device = audio_device.input.unwrap();
+        let input_device = audio_device.input.unwrap();
 
-        let (sender, receiver) = oneshot::channel::<()>();
+        let samples = record_audio(input_device, config);
 
         let err_callback = |err| eprintln!("an error occurred on stream: {}", err);
 
+        let stream = stream_audio(
+            audio_device.output.unwrap(),
+            err_callback,
+            samples.into_iter(),
+        )
+        .unwrap();
+
+        stream.play().unwrap();
+
+        sleep(Duration::from_secs(2));
+    }
+
+    #[test]
+    fn audio_encoding_decoding() {
+        let host = io::default_host();
+        let audio_device = io::get_audio_device(host);
+        let config = audio_device.get_input_config().unwrap().unwrap();
+
+        let sample = record_audio(audio_device.input.unwrap(), config.clone());
+
+        let mut encoder = create_opus_encoder(config.clone(), opus::Application::Audio, opus::Bitrate::Max).unwrap();
+
+        let mut encoded_buf = vec![];
+
+        encoder.encode_float(&sample, &mut encoded_buf).unwrap();
+
+        let mut decoder = create_opus_decoder(config.sample_rate().0).unwrap();
+
+        let mut decoded_buf = vec![];
+
+        decoder.decode_float(&mut encoded_buf, &mut decoded_buf, false).unwrap();
+
+        let err_callback = |err| eprintln!("an error occurred on stream: {}", err);
+
+        let stream = stream_audio(
+            audio_device.output.unwrap(),
+            err_callback,
+            decoded_buf.into_iter(),
+        )
+        .unwrap();
+
+        stream.play().unwrap();
+
+        sleep(Duration::from_secs(2));
+    }
+
+    fn record_audio(
+        input_device: cpal::Device,
+        config: cpal::SupportedStreamConfig,
+    ) -> Vec<f32> {
+        let (sender, receiver) = oneshot::channel::<()>();
+        let err_callback = |err| eprintln!("an error occurred on stream: {}", err);
+
         let buffer_handle =
-            record_audio_with_interrupt(receiver, output_device, err_callback, config.into())
+            record_audio_with_interrupt(receiver, input_device, err_callback, config.into())
                 .unwrap();
 
         sleep(Duration::from_secs(3));
 
         sender.send(()).unwrap();
 
-        let samples = buffer_handle.lock().clone().into_iter();
-
-        let stream = stream_audio(audio_device.output.unwrap(), err_callback, samples).unwrap();
-
-        stream.play().unwrap();
-
-        sleep(Duration::from_secs(2));
+        let samples = buffer_handle.lock().clone();
+        samples
     }
 }

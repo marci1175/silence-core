@@ -1,4 +1,4 @@
-//! The crate offers audio recording capabilities via being a middleware on [`cpal`].
+//! Offers audio recording capabilities via being a middleware on [`cpal`].
 
 use std::{sync::Arc, thread::JoinHandle};
 
@@ -47,6 +47,7 @@ where
             None,
         )?;
 
+        //Start stream
         stream.play()?;
 
         //Wait for interrupt

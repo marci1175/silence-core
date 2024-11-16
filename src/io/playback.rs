@@ -1,10 +1,7 @@
-//! The crate offers playback capabilities via being a middleware on [`cpal`].
+//! Offers playback capabilities via being a middleware on [`cpal`].
 
 use anyhow::Result;
-use cpal::{
-    traits::{DeviceTrait, StreamTrait},
-    BufferSize, SizedSample, Stream, StreamConfig, StreamError,
-};
+use cpal::{traits::DeviceTrait, BufferSize, SizedSample, Stream, StreamConfig, StreamError};
 
 use super::OutputDevice;
 
@@ -12,24 +9,25 @@ use super::OutputDevice;
 /// Plays back audio from an [`Iterator`] to an [`OutputDevice`].
 ///
 /// # Behavior
-/// The [`Stream`] returned by this function will not play automaticly, you will have to call [`StreamTrait::play`] to start playing.
+/// The [`Stream`] returned by this function will not play automaticly, you will have to call [`cpal::traits::StreamTrait::play`] to start playing.
 /// If the ongoing [`Stream`] is dropped the audio stream will stop.
 ///
 /// # Error
 /// The `error_callback` is called when an error occurs while streaming to the output.
-/// 
-pub fn stream_audio<
-    //This is the type of the `Sample`-s we are streaming to the [`OutputDevice`]
-    T: SizedSample + Send + Sync + cpal::FromSample<f32> + 'static,
-    //Error callback is called when the output_stream encounters an error
-    E: FnMut(StreamError) + Send + 'static,
-    //The iterator for writing the samples to the output / data buffer
-    S: Iterator<Item = T> + Send + 'static + Clone,
->(
+///
+pub fn stream_audio<T, E, S>(
     device: OutputDevice,
     error_callback: E,
     mut samples: S,
-) -> Result<Stream> {
+) -> Result<Stream>
+where
+    //This is the type of the `Sample`-s we are streaming to the [`OutputDevice`]
+    T: SizedSample + Send + Sync + cpal::FromSample<f32> + 'static,
+    //The iterator for writing the samples to the output / data buffer
+    S: Iterator<Item = T> + Send + 'static + Clone,
+    //Error callback is called when the output_stream encounters an error
+    E: FnMut(StreamError) + Send + 'static,
+{
     //Get supported config
     let supported_config = device.default_output_config()?;
 

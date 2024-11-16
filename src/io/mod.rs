@@ -15,8 +15,8 @@ pub type OutputDevice = Device;
 /// Wrapper type for differentiating [`OutputDevice`] from [`InputDevice`] granted the user passes them in right when creating an [`AudioDevice`].
 pub type InputDevice = Device;
 
-#[allow(missing_debug_implementations)]
 /// The host's audio input and output devices.
+#[allow(missing_debug_implementations)]
 pub struct AudioDevice {
     /// The output device of the host.
     pub output: Option<OutputDevice>,

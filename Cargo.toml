@@ -7,11 +7,22 @@ license = "Apache-2.0"
 categories = ["asynchronous", "multimedia::audio", "multimedia::encoding"]
 
 [features]
-default = ["io"]
-async = []
+# Default features
+default = ["io", "opus"]
+
+# Enables Serialization and Deserialization for structs.
 serde = ["dep:serde"]
+
+# Enables audio I/O
 io = ["dep:cpal"]
+
+# Enables opus codec encoding
 opus = ["dep:opus"]
+
+# Enables all the features
+full = ["io", "opus", "serde", "async"]
+
+async = []
 
 [package.metadata.docs.rs]
 all-features = true
