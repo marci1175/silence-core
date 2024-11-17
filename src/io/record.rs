@@ -15,7 +15,7 @@ use super::InputDevice;
 ///
 /// # Behavior
 /// The recording thread is automaticly started at the creation of the (Input)[`cpal::Stream`].
-/// Records audio until (Pushes the samples into the Arc<Mutex<Vec<f32>>>>) the [`tokio::sync::oneshot::Receiver`] receives a message.
+/// Records audio until (Pushes the samples into the [`Arc<Mutex<Vec<f32>>>`]) the [`tokio::sync::oneshot::Receiver`] receives a message.
 /// The [`Sync`] buffer is returned and can be accessed.
 ///
 /// # Error

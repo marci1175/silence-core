@@ -18,5 +18,5 @@ pub struct SoundPacket {
     /// The bytes of the encoded sound packet.
     pub bytes: Vec<u8>,
     /// The count of bytes of the packet.
-    pub bytes_length: u64,
+    pub samples_per_frame: u64,
 }
