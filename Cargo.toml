@@ -1,6 +1,6 @@
 [package]
 name = "silence-core"
-version = "0.1.4"
+version = "0.1.5"
 edition = "2021"
 description = "Core audio I/O abstractions for the silence crate."
 license = "Apache-2.0"

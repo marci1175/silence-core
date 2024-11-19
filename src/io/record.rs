@@ -36,7 +36,7 @@ where
 
     let _: JoinHandle<anyhow::Result<()>> = std::thread::spawn(move || {
         let stream: cpal::Stream = input_device.build_input_stream(
-            &config.into(),
+            &config,
             move |data: &[f32], _info: &cpal::InputCallbackInfo| {
                 let mut buffer_handle = buffer_handle_clone.lock();
                 for sample in data.iter() {

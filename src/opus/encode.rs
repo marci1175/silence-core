@@ -1,9 +1,8 @@
 //! Eanbles raw sample encoding to opus.
 
-use cpal::SupportedStreamConfig;
-use opus::{Channels, Decoder, Encoder};
+use opus::{Channels, Encoder};
 
-use super::{decode::decode_sample_set_size_opus, SoundPacket};
+use super::SoundPacket;
 
 ///
 /// Create an [`opus`] encoder.
@@ -52,7 +51,7 @@ pub fn encode_sample_set_size_opus(
 ) -> anyhow::Result<SoundPacket> {
     let mut compressed_buffer = vec![0; 1500];
 
-    let encoded_bytes_count = encoder.encode_float(&samples, &mut compressed_buffer)?;
+    let encoded_bytes_count = encoder.encode_float(samples, &mut compressed_buffer)?;
 
     Ok(SoundPacket {
         encoder_type: EncoderType::Opus(encoder.get_inband_fec()?),
