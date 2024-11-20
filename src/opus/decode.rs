@@ -45,13 +45,13 @@ pub fn decode_sample_set_size_opus(
 
 ///
 /// Decodes a list of [`SoundPacket`]-s, into one raw sample.
-/// 
+///
 /// # Behavior
 /// The function takes a [`Decoder`] and a list of [`SoundPacket`]-s to decode. All information about the decoding process is included in said [`SoundPacket`]-s.
-/// 
+///
 /// # Error
 /// Returns an error, if the [`SoundPacket`] is corrupted (Contains invalid data)
-/// 
+///
 pub fn decode_samples_opus(
     mut decoder: Decoder,
     sound_packets: Vec<SoundPacket>,
@@ -61,8 +61,7 @@ pub fn decode_samples_opus(
     for sound_packet in sound_packets {
         let super::encode::EncoderType::Opus(fec) = sound_packet.encoder_type;
 
-        let decoded_samples =
-            decode_sample_set_size_opus(&mut decoder, sound_packet, fec)?;
+        let decoded_samples = decode_sample_set_size_opus(&mut decoder, sound_packet, fec)?;
 
         samples.extend(decoded_samples);
     }

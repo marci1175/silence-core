@@ -1,6 +1,6 @@
 [package]
 name = "silence-core"
-version = "0.1.5"
+version = "0.1.6"
 edition = "2021"
 description = "Core audio I/O abstractions for the silence crate."
 license = "Apache-2.0"
@@ -20,9 +20,13 @@ io = ["dep:cpal"]
 opus = ["dep:opus"]
 
 # Enables all the features
-full = ["io", "opus", "serde", "async"]
+full = ["io", "opus", "serde", "av1", "opencv"]
 
-async = []
+# Enables image input
+opencv = ["dep:opencv"]
+
+# Enables image encoding to av1
+av1 = ["dep:ravif", "opencv"]
 
 [package.metadata.docs.rs]
 all-features = true
@@ -34,3 +38,5 @@ cpal = {version = "0.15.3", optional = true}
 serde = { version = "1.0.215", optional = true, features = ["derive"] }
 tokio = {version = "1.41.1", features = ["sync"]}
 opus = {version = "0.3.0", optional = true}
+ravif = {version = "0.11.11", optional = true}
+opencv = {version = "0.93.4", optional = true}

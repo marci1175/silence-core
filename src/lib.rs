@@ -29,3 +29,9 @@ mod tests;
 
 #[cfg(feature = "opus")]
 pub mod opus;
+
+#[cfg(feature = "opencv")]
+pub mod opencv;
+
+#[cfg(feature = "av1")]
+pub mod avif;

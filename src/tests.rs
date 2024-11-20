@@ -105,13 +105,11 @@ mod tests {
         )
         .unwrap();
 
-        let sound_packets =
-            encode_samples_opus(encoder, &sample, 20, channels).unwrap();
+        let sound_packets = encode_samples_opus(encoder, &sample, 20, channels).unwrap();
 
         let decoder = create_opus_decoder(48000).unwrap();
 
-        let decoded_buf =
-            decode_samples_opus(decoder, sound_packets).unwrap();
+        let decoded_buf = decode_samples_opus(decoder, sound_packets).unwrap();
 
         let err_callback = |err| eprintln!("an error occurred on stream: {}", err);
 

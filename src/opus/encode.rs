@@ -64,10 +64,10 @@ pub fn encode_sample_set_size_opus(
 
 ///
 /// Encodes raw samples (f32) into a list of [`SoundPacket`]-s.
-/// 
+///
 /// # Behavior
 /// Returns a list of the encoded [`SoundPacket`]-s. The frame duration and the channels ([`Channels`]) is needed to know the [`SoundPacket`]'s size.
-/// 
+///
 /// # Error
 /// Returns an error if the following arguments are invalid:
 ///     * Invalid raw samples
