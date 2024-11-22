@@ -19,6 +19,6 @@ The crate provides multiple ways to handle audio I/O on multiple platforms effic
 The crate provides ways to utilize the user's webcam to send images.
 
 * APIs for encoding in certain codecs:
-The crate provides ways to encode the raw auudio samples with [opus](https://opus-codec.org/). It also provides ways to encode raw images with the [AV1](https://en.wikipedia.org/wiki/AV1) codec.
+The crate provides ways to encode the raw auudio samples with [Opus](https://opus-codec.org/). It also provides ways to encode raw images with the [AV1](https://en.wikipedia.org/wiki/AV1) codec.
 
 A complete version of the documentation is available at [here](https://docs.rs/silence-core/latest).
