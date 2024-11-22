@@ -31,7 +31,7 @@ mod tests;
 pub mod opus;
 
 #[cfg(feature = "opencv")]
-pub mod opencv;
+pub mod cam;
 
 #[cfg(feature = "av1")]
 pub mod avif;

@@ -1,6 +1,6 @@
 [package]
 name = "silence-core"
-version = "0.1.6"
+version = "0.1.7"
 edition = "2021"
 description = "Core audio I/O abstractions for the silence crate."
 license = "Apache-2.0"
@@ -8,7 +8,7 @@ categories = ["asynchronous", "multimedia::audio", "multimedia::encoding"]
 
 [features]
 # Default features
-default = ["io", "opus"]
+default = ["io", "opus", "av1"]
 
 # Enables Serialization and Deserialization for structs.
 serde = ["dep:serde"]
@@ -23,7 +23,7 @@ opus = ["dep:opus"]
 full = ["io", "opus", "serde", "av1", "opencv"]
 
 # Enables image input
-opencv = ["dep:opencv"]
+opencv = ["dep:opencv", "dep:image"]
 
 # Enables image encoding to av1
 av1 = ["dep:ravif", "opencv"]
@@ -40,3 +40,4 @@ tokio = {version = "1.41.1", features = ["sync"]}
 opus = {version = "0.3.0", optional = true}
 ravif = {version = "0.11.11", optional = true}
 opencv = {version = "0.93.4", optional = true}
+image = {version = "0.25.5", optional = true}

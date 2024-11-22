@@ -3,20 +3,30 @@
 
 #[cfg(test)]
 mod tests {
-    use std::{thread::sleep, time::Duration};
+    use std::{fs, thread::sleep, time::Duration};
 
     use cpal::traits::{DeviceTrait, StreamTrait};
     use opus::Channels;
+    use ravif::Encoder;
     use tokio::sync::oneshot;
 
     use crate::{
-        io::{self, playback::stream_audio, record::record_audio_with_interrupt},
-        opus::{
-            decode::create_opus_decoder,
-            decode::decode_samples_opus,
+        avif::encoding::{encode_image, encode_raw_image}, cam, io::{self, playback::stream_audio, record::record_audio_with_interrupt}, opus::{
+            decode::{create_opus_decoder, decode_samples_opus},
             encode::{create_opus_encoder, encode_samples_opus},
-        },
+        }
     };
+
+    #[test]
+    fn encode() {
+        let mut webcam = cam::Webcam::new_def_auto_detect().unwrap();
+        let (bytes, size) = webcam.get_frame().unwrap();
+
+        let encoder = Encoder::new().with_speed(3);
+        let encoded = encode_raw_image(encoder.clone(), &bytes, size.width as usize, size.height as usize).unwrap();
+        
+        fs::write("asdsad.avif", encoded.avif_file);
+    }
 
     #[test]
     fn audio_playback() {
