@@ -8,8 +8,8 @@ mod tests {
     use cpal::traits::{DeviceTrait, StreamTrait};
     use opus::Channels;
     use ravif::Encoder;
-    use tokio::sync::oneshot;
 
+    use tokio::sync::oneshot;
     use crate::{
         avif::encoding::encode_raw_image,
         cam,
