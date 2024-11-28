@@ -3,9 +3,10 @@
 
 #[cfg(test)]
 mod tests {
-    use std::{thread::sleep, time::Duration};
+    use std::{fs, thread::sleep, time::Duration};
 
     use cpal::traits::{DeviceTrait, StreamTrait};
+    use opencv::videoio::{CAP_ANY, CAP_MSMF};
     use opus::Channels;
     use ravif::Encoder;
 
@@ -22,7 +23,7 @@ mod tests {
 
     #[test]
     fn encode() {
-        let mut webcam = cam::Webcam::new_def_auto_detect().unwrap();
+        let mut webcam = cam::Webcam::new_def(CAP_ANY).unwrap();
         let (bytes, size) = webcam.get_frame().unwrap();
 
         let encoder = Encoder::new().with_speed(3);
@@ -34,7 +35,7 @@ mod tests {
         )
         .unwrap();
 
-        assert_ne!(encoded.avif_file.len(), 0)
+        assert_ne!(dbg!(encoded.avif_file.len()), 0)
     }
 
     #[test]
