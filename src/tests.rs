@@ -3,7 +3,7 @@
 
 #[cfg(test)]
 mod tests {
-    use std::{fs, thread::sleep, time::Duration};
+    use std::{collections::VecDeque, fs, thread::sleep, time::Duration};
 
     use cpal::traits::{DeviceTrait, StreamTrait};
     use opencv::videoio::{CAP_ANY, CAP_MSMF};
@@ -91,12 +91,12 @@ mod tests {
         sleep(Duration::from_secs(2));
     }
 
-    fn record_audio(input_device: cpal::Device, config: cpal::SupportedStreamConfig) -> Vec<f32> {
+    fn record_audio(input_device: cpal::Device, config: cpal::SupportedStreamConfig) -> VecDeque<f32> {
         let (sender, receiver) = oneshot::channel::<()>();
         let err_callback = |err| eprintln!("an error occurred on stream: {}", err);
 
         let buffer_handle =
-            record_audio_with_interrupt(receiver, input_device, err_callback, config.into())
+            record_audio_with_interrupt(input_device, receiver, err_callback, config.into())
                 .unwrap();
 
         sleep(Duration::from_secs(3));
@@ -125,7 +125,7 @@ mod tests {
         )
         .unwrap();
 
-        let sound_packets = encode_samples_opus(encoder, &sample, 20, channels).unwrap();
+        let sound_packets = encode_samples_opus(encoder, &Into::<Vec<f32>>::into(sample), 20, channels).unwrap();
 
         let decoder = create_opus_decoder(48000).unwrap();
 
