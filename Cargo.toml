@@ -1,6 +1,6 @@
 [package]
 name = "silence-core"
-version = "0.1.9"
+version = "0.1.11"
 edition = "2021"
 description = "Core audio I/O abstractions for the silence crate."
 license = "Apache-2.0"
@@ -41,3 +41,4 @@ opus = {version = "0.3.0", optional = true}
 ravif = {version = "0.11.11", optional = true}
 opencv = {version = "0.93.4", optional = true}
 image = {version = "0.25.5", optional = true}
+deepsize = "0.2.0"

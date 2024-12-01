@@ -2,7 +2,9 @@
 
 use opus::{Channels, Encoder};
 
-use super::SoundPacket;
+use crate::io::EncoderType;
+
+use crate::io::SoundPacket;
 
 ///
 /// Create an [`opus`] encoder.
@@ -99,13 +101,4 @@ pub fn encode_samples_opus(
     }
 
     Ok(sound_packets)
-}
-
-/// Shows the encoder type of the packet.
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug)]
-pub enum EncoderType {
-    /// The encoder of this packet was [`opus`].
-    /// The inner value contains whether.
-    Opus(bool),
 }

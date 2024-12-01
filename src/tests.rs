@@ -6,6 +6,7 @@ mod tests {
     use std::{collections::VecDeque, fs, thread::sleep, time::Duration};
 
     use cpal::traits::{DeviceTrait, StreamTrait};
+    use deepsize::DeepSizeOf;
     use opencv::videoio::{CAP_ANY, CAP_MSMF};
     use opus::Channels;
     use ravif::Encoder;
@@ -99,7 +100,7 @@ mod tests {
             record_audio_with_interrupt(input_device, receiver, err_callback, config.into())
                 .unwrap();
 
-        sleep(Duration::from_secs(3));
+        sleep(Duration::from_millis(30));
 
         sender.send(()).unwrap();
 
@@ -125,13 +126,17 @@ mod tests {
         )
         .unwrap();
 
-        let sound_packets: Vec<crate::opus::SoundPacket> = encode_samples_opus(encoder, &Into::<Vec<f32>>::into(sample), 20, channels).unwrap();
+        let sound_packets: Vec<crate::io::SoundPacket> = encode_samples_opus(encoder, &Into::<Vec<f32>>::into(sample), 20, channels).unwrap();
 
         let decoder = create_opus_decoder(48000).unwrap();
+
+        dbg!(sound_packets.deep_size_of());
 
         let decoded_buf = decode_samples_opus(decoder, sound_packets).unwrap();
 
         let err_callback = |err| eprintln!("an error occurred on stream: {}", err);
+
+        sleep(Duration::from_secs(1));
 
         let stream = stream_audio(
             audio_device.output.unwrap(),

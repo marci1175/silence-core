@@ -3,7 +3,7 @@
 use anyhow::Result;
 use opus::Decoder;
 
-use super::SoundPacket;
+use crate::io::SoundPacket;
 
 ///
 /// Create an [`opus`] decoder.
@@ -59,7 +59,7 @@ pub fn decode_samples_opus(
     let mut samples = vec![];
 
     for sound_packet in sound_packets {
-        let super::encode::EncoderType::Opus(fec) = sound_packet.encoder_type;
+        let crate::io::EncoderType::Opus(fec) = sound_packet.encoder_type;
 
         let decoded_samples = decode_sample_set_size_opus(&mut decoder, sound_packet, fec)?;
 
