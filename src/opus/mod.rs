@@ -4,6 +4,9 @@ use encode::EncoderType;
 pub mod decode;
 pub mod encode;
 
+/// Re-export the opus crate.
+pub use opus;
+
 /// The encoded sound packet.
 /// Contains useful information about the encoded packet.
 #[derive(Debug)]

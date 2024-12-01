@@ -8,6 +8,8 @@ use opencv::{
 
 //Reinport important functions
 pub use opencv::imgproc::{cvt_color_def, COLOR_BGR2RGB};
+//Re-export the opencv crate.
+pub use opencv;
 
 /// Webcam struct definition.
 /// The struct wraps the ```VideoCapture``` type, and has custom functions for it.

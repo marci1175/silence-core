@@ -22,7 +22,7 @@ mod tests {
     };
 
     #[test]
-    fn encode() {
+    fn image_encode() {
         let mut webcam = cam::Webcam::new_def(CAP_ANY).unwrap();
         let (bytes, size) = webcam.get_frame().unwrap();
 
@@ -125,7 +125,7 @@ mod tests {
         )
         .unwrap();
 
-        let sound_packets = encode_samples_opus(encoder, &Into::<Vec<f32>>::into(sample), 20, channels).unwrap();
+        let sound_packets: Vec<crate::opus::SoundPacket> = encode_samples_opus(encoder, &Into::<Vec<f32>>::into(sample), 20, channels).unwrap();
 
         let decoder = create_opus_decoder(48000).unwrap();
 
